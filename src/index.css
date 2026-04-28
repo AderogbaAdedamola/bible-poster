@@ -1,1 +1,39 @@
 @import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap');
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+
+  * {
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+
+
+  img, svg, video {
+    transition: none;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-body {
+    font-family: var(--font-body);
+  }
+}
