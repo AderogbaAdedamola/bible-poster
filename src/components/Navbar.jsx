@@ -33,7 +33,7 @@ export default function Navbar() {
         {/* Center: Nav links — desktop only */}
         <nav className="hidden sm:flex items-center gap-1">
           <NavLink to="/" active={isActive("/")}>Home</NavLink>
-          <NavLink to="/editor" active={isActive("/editor")}>Create</NavLink>
+          <NavLink to="/create" active={isActive("/create")}>Create</NavLink>
         </nav>
 
         {/* Right: Actions */}
@@ -50,7 +50,7 @@ export default function Navbar() {
 
           {/* CTA — desktop only */}
           <Link
-            to="/editor"
+            to="/create"
             className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 hover:bg-stone-700 dark:hover:bg-white transition-all duration-200"
           >
             <BookOpen size={15} />
@@ -79,7 +79,7 @@ export default function Navbar() {
           <MobileNavLink to="/" active={isActive("/")}>
             Home
           </MobileNavLink>
-          <MobileNavLink to="/editor" active={isActive("/editor")}>
+          <MobileNavLink to="/create" active={isActive("/create")}>
             Create poster
           </MobileNavLink>
         </nav>

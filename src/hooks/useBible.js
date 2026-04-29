@@ -1,60 +1,68 @@
 // src/hooks/useBible.js
-// Wraps the api.bible REST API with simple fetch + in-memory cache
+// Fetches from bible.helloao.org — completely free, no API key needed.
+//
+// API structure:
+//   GET /api/{translationId}/{bookId}/{chapter}.json
+//   → returns the full chapter with all verses as an array
+//
+// We always fetch a whole chapter at once (it's cheap — small JSON files
+// served from AWS CDN), then pluck the verse we need from the array.
+// This means selecting verse 5 after verse 3 costs zero extra requests.
 
-const BASE = "https://api.scripture.api.bible/v1"
-const API_KEY = import.meta.env.VITE_BIBLE_API_KEY
+const BASE = "https://bible.helloao.org/api"
 
-// Simple in-memory cache so we don't re-fetch the same data
+// In-memory cache: key = "translationId/bookId/chapter"
 const cache = new Map()
 
-async function apiFetch(path) {
-  if (cache.has(path)) return cache.get(path)
+/**
+ * Fetch all verses for a chapter.
+ * Returns an array of verse objects: { number, text }
+ */
+export async function fetchChapter(translationId, bookId, chapter) {
+  const key = `${translationId}/${bookId}/${chapter}`
+  if (cache.has(key)) return cache.get(key)
 
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { "api-key": API_KEY },
-  })
+  const res = await fetch(`${BASE}/${translationId}/${bookId}/${chapter}.json`)
+  if (!res.ok) throw new Error(`Failed to fetch ${bookId} ${chapter} (${res.status})`)
 
-  if (!res.ok) {
-    throw new Error(`api.bible error: ${res.status} ${res.statusText}`)
-  }
+  const data = await res.json()
 
-  const json = await res.json()
-  cache.set(path, json.data)
-  return json.data
-}
+  // helloao returns: data.verses = [{ number, text, ... }, ...]
+  const verses = (data.verses ?? []).map((v) => ({
+    number: v.number,
+    text:   v.text?.trim() ?? "",
+  }))
 
-// ─── Exported helpers ────────────────────────────────────────────────
-
-/** Fetch all chapters for a given book in a given Bible version */
-export async function fetchChapters(bibleId, bookId) {
-  return apiFetch(`/bibles/${bibleId}/books/${bookId}/chapters`)
-}
-
-/** Fetch all verses for a given chapter */
-export async function fetchVerses(bibleId, chapterId) {
-  return apiFetch(`/bibles/${bibleId}/chapters/${chapterId}/verses`)
+  cache.set(key, verses)
+  return verses
 }
 
 /**
- * Fetch the full text of a single verse.
- * Returns the verse object with a clean `text` field stripped of HTML/markup.
+ * Fetch a single verse text.
+ * bookName is used only for building the human-readable reference string.
  */
-export async function fetchVerseText(bibleId, verseId) {
-  const data = await apiFetch(
-    `/bibles/${bibleId}/verses/${verseId}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`
-  )
+export async function fetchVerse(translationId, bookId, bookName, chapter, verseNumber) {
+  const verses = await fetchChapter(translationId, bookId, chapter)
+  const verse  = verses.find((v) => v.number === verseNumber)
+  if (!verse) throw new Error(`Verse ${verseNumber} not found in ${bookId} ${chapter}`)
   return {
-    ...data,
-    text: data.content?.trim() ?? "",
+    text: verse.text,
+    ref:  `${bookName} ${chapter}:${verseNumber}`,
   }
 }
 
 /**
- * Fetch a random featured verse.
- * Takes a bibleId and a list of FEATURED_VERSES refs, picks one at random.
+ * Pick a random verse from FEATURED_VERSES and fetch its text.
  */
-export async function fetchRandomVerse(bibleId, featuredVerses) {
+export async function fetchRandomVerse(translationId, featuredVerses) {
   const pick = featuredVerses[Math.floor(Math.random() * featuredVerses.length)]
-  const data = await fetchVerseText(bibleId, pick.ref)
-  return { ...data, display: pick.display }
+  const result = await fetchVerse(
+    translationId,
+    pick.bookId,
+    // derive book name from display e.g. "John 3:16" → "John"
+    pick.display.replace(/\s+\d.*$/, ""),
+    pick.chapter,
+    pick.verse
+  )
+  return { ...result, bookId: pick.bookId, chapter: pick.chapter, verse: pick.verse }
 }

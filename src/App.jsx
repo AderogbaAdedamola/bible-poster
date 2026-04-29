@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Home from "./pages/Home"
+import Create from "./pages/Create"
 import Editor from "./pages/Editor"
 import PosterView from "./pages/PosterView"
 import NotFound from "./pages/NotFound"
@@ -12,6 +13,7 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/"        element={<Home />} />
+          <Route path="/create"  element={<Create />} />
           <Route path="/editor"  element={<Editor />} />
           <Route path="/v"       element={<PosterView />} />
           <Route path="*"        element={<NotFound />} />
