@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom"
 import { BookText, Palette, Share2 } from "lucide-react"
 import Logo from "../components/Logo"
+import VersePicker from "../components/VersePicker"
 
 export default function Home() {
   return (
