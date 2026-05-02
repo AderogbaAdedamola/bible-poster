@@ -1,45 +1,109 @@
 // src/hooks/useBible.js
-// Fetches from bible.helloao.org — completely free, no API key needed.
+// All fetches hit bible.helloao.org — free, no API key.
 //
-// API structure:
-//   GET /api/{translationId}/{bookId}/{chapter}.json
-//   → returns the full chapter with all verses as an array
-//
-// We always fetch a whole chapter at once (it's cheap — small JSON files
-// served from AWS CDN), then pluck the verse we need from the array.
-// This means selecting verse 5 after verse 3 costs zero extra requests.
+// CACHING STRATEGY:
+//   Translations list → localStorage with a 24hr timestamp
+//     (translations rarely change, no point re-fetching every session)
+//   Chapter verses    → Map() in memory for the session
+//     (small JSON files, fast to re-fetch, no need to persist)
 
 const BASE = "https://bible.helloao.org/api"
+const CACHE_KEY      = "postverse_translations"
+const CACHE_DURATION = 24 * 60 * 60 * 1000  // 24 hours in ms
 
-// In-memory cache: key = "translationId/bookId/chapter"
-const cache = new Map()
+// In-memory cache for chapter verse arrays
+// key: "translationId/bookId/chapter"  value: verse[]
+const chapterCache = new Map()
+
+// ── Translations ──────────────────────────────────────────────────────
+
+/**
+ * Fetch all available translations.
+ * - Checks localStorage first; returns cached data if under 24hrs old.
+ * - On cache miss or expiry: fetches fresh, saves to localStorage.
+ * - Filters to full Bibles (66 books) with ltr text direction,
+ *   so we don't show partial NT-only or RTL translations.
+ */
+export async function fetchTranslations() {
+  // 1. Check localStorage
+  try {
+    const stored = localStorage.getItem(CACHE_KEY)
+    if (stored) {
+      const { timestamp, data } = JSON.parse(stored)
+      const age = Date.now() - timestamp
+      if (age < CACHE_DURATION) {
+        return data  // still fresh — return immediately
+      }
+    }
+  } catch (_) {
+    // corrupted localStorage entry — fall through to fresh fetch
+  }
+
+  // 2. Fetch fresh from API
+  const res = await fetch(`${BASE}/available_translations.json`)
+  if (!res.ok) throw new Error(`Failed to fetch translations (${res.status})`)
+  const json = await res.json()
+
+  // 3. Filter: English, full 66-book Bibles, left-to-right only
+  const filtered = json.translations.filter(
+    (t) =>
+      t.language === "eng" &&
+      t.textDirection === "ltr" &&
+      t.numberOfBooks === 66
+  )
+
+  // 4. Save to localStorage with current timestamp
+  try {
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({ timestamp: Date.now(), data: filtered })
+    )
+  } catch (_) {
+    // localStorage might be full or blocked — not a hard failure
+  }
+
+  return filtered
+}
+
+// ── Chapter + Verses ──────────────────────────────────────────────────
 
 /**
  * Fetch all verses for a chapter.
- * Returns an array of verse objects: { number, text }
+ * Returns [{ number, text }]
+ * Cached in memory for the session.
  */
 export async function fetchChapter(translationId, bookId, chapter) {
   const key = `${translationId}/${bookId}/${chapter}`
-  if (cache.has(key)) return cache.get(key)
+
+  if (chapterCache.has(key)) return chapterCache.get(key)
 
   const res = await fetch(`${BASE}/${translationId}/${bookId}/${chapter}.json`)
-  if (!res.ok) throw new Error(`Failed to fetch ${bookId} ${chapter} (${res.status})`)
+  if (!res.ok) throw new Error(`Could not load ${bookId} ${chapter} (${res.status})`)
 
   const data = await res.json()
 
-  // helloao returns: data.verses = [{ number, text, ... }, ...]
-  const verses = (data.verses ?? []).map((v) => ({
-    number: v.number,
-    text:   v.text?.trim() ?? "",
-  }))
+  // The API returns data.chapter.content — an array of content blocks.
+  // Each block has a { type } field. We only want type "verse".
+  // Verse blocks look like: { type: "verse", number: 1, content: ["text", ...] }
+  // content is a mixed array of strings and inline objects (footnotes etc.)
+  // We join only the string parts to get clean verse text.
+  const verses = (data.chapter?.content ?? [])
+    .filter((block) => block.type === "verse")
+    .map((block) => ({
+      number: block.number,
+      text: (block.content ?? [])
+        .map((c) => (typeof c === "string" ? c : c.text ?? ""))
+        .join("")
+        .trim(),
+    }))
 
-  cache.set(key, verses)
+  chapterCache.set(key, verses)
   return verses
 }
 
 /**
- * Fetch a single verse text.
- * bookName is used only for building the human-readable reference string.
+ * Fetch a single verse by chapter + verse number.
+ * Builds the human-readable ref string e.g. "John 3:16"
  */
 export async function fetchVerse(translationId, bookId, bookName, chapter, verseNumber) {
   const verses = await fetchChapter(translationId, bookId, chapter)
@@ -55,12 +119,11 @@ export async function fetchVerse(translationId, bookId, bookName, chapter, verse
  * Pick a random verse from FEATURED_VERSES and fetch its text.
  */
 export async function fetchRandomVerse(translationId, featuredVerses) {
-  const pick = featuredVerses[Math.floor(Math.random() * featuredVerses.length)]
+  const pick   = featuredVerses[Math.floor(Math.random() * featuredVerses.length)]
   const result = await fetchVerse(
     translationId,
     pick.bookId,
-    // derive book name from display e.g. "John 3:16" → "John"
-    pick.display.replace(/\s+\d.*$/, ""),
+    pick.display.replace(/\s+\d.*$/, ""), // "John 3:16" → "John"
     pick.chapter,
     pick.verse
   )

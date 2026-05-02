@@ -1,11 +1,13 @@
+// src/components/VersePicker.jsx
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
-  ChevronRight, ChevronDown, Shuffle,
+  ChevronRight, Shuffle,
   Loader2, AlertCircle, Check
 } from "lucide-react"
+import TranslationPicker from "./TranslationPicker"
 import { usePoster } from "../context/PosterContext"
-import { BIBLE_VERSIONS, BIBLE_BOOKS, FEATURED_VERSES } from "../data/bibles"
+import { BIBLE_BOOKS, FEATURED_VERSES } from "../data/bibles"
 import { fetchChapter, fetchVerse, fetchRandomVerse } from "../hooks/useBible"
 
 export default function VersePicker() {
@@ -21,13 +23,7 @@ export default function VersePicker() {
 
   // ── Handlers ─────────────────────────────────────────────────────
 
-  function handleTranslation(e) {
-    const v = BIBLE_VERSIONS.find((b) => b.id === e.target.value)
-    dispatch({ type: "SET_TRANSLATION", translationId: v.id, translationName: v.name })
-    setVerses([])
-  }
-
-  function handleBook(book) {
+function handleBook(book) {
     dispatch({ type: "SET_BOOK", bookId: book.id, bookName: book.name })
     setVerses([])
     setError(null)
@@ -129,20 +125,15 @@ export default function VersePicker() {
         <label className="block text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-widest mb-2">
           Translation
         </label>
-        <div className="relative inline-block">
-          <select
-            value={state.translationId}
-            onChange={handleTranslation}
-            className="appearance-none pl-4 pr-10 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer min-w-56"
-          >
-            {BIBLE_VERSIONS.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name} — {v.label}
-              </option>
-            ))}
-          </select>
-          <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
-        </div>
+        <TranslationPicker
+          value={state.translationId}
+          valueName={state.translationName
+            ? `${state.translationName} — ${state.translationLabel ?? ""}`
+            : null}
+          onChange={({ id, name, label }) =>
+            dispatch({ type: "SET_TRANSLATION", translationId: id, translationName: name, translationLabel: label })
+          }
+        />
       </div>
 
       {/* Random verse */}

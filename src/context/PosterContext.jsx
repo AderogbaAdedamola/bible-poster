@@ -1,12 +1,12 @@
+// src/context/PosterContext.jsx
 import { createContext, useContext, useReducer } from "react"
-import { BIBLE_VERSIONS } from "../data/bibles"
-
 const PosterContext = createContext(null)
 
 const initialState = {
   // Bible selection
-  translationId:   BIBLE_VERSIONS[0].id,
-  translationName: BIBLE_VERSIONS[0].name,
+  translationId:    "BSB",
+  translationName:  "BSB",
+  translationLabel: "Berean Standard Bible",
 
   // Verse selection
   bookId:      null,
@@ -29,8 +29,9 @@ function reducer(state, action) {
     case "SET_TRANSLATION":
       return {
         ...state,
-        translationId:   action.translationId,
-        translationName: action.translationName,
+        translationId:    action.translationId,
+        translationName:  action.translationName,
+        translationLabel: action.translationLabel ?? "",
         // reset downstream when version changes
         bookId: null, bookName: null,
         chapter: null, verseNumber: null,

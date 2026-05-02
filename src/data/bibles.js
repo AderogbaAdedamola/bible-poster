@@ -2,16 +2,6 @@
 // All data for bible.helloao.org — NO API key required
 // Full docs: https://bible.helloao.org/docs/reference/
 
-export const BIBLE_VERSIONS = [
-  { id: "BSB",     name: "BSB",  label: "Berean Standard Bible" },
-  { id: "engKJV",  name: "KJV",  label: "King James Version" },
-  { id: "engASV",  name: "ASV",  label: "American Standard Version" },
-  { id: "engWEB",  name: "WEB",  label: "World English Bible" },
-  { id: "engNET",  name: "NET",  label: "New English Translation" },
-  { id: "engYLT",  name: "YLT",  label: "Young's Literal Translation" },
-  { id: "engDBY",  name: "DBY",  label: "Darby Bible" },
-]
-
 export const BIBLE_BOOKS = [
   // Old Testament
   { id: "GEN", name: "Genesis",          chapters: 50,  testament: "OT" },

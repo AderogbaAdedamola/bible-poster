@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Sun, Moon, BookOpen, Menu, X } from "lucide-react"
