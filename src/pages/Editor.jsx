@@ -14,7 +14,6 @@ import { downloadPoster } from "../utils/download"
 const TABS = [
   { id:"background", label:"Background", icon: Image          },
   { id:"style",      label:"Style",      icon: Layers         },
-  { id:"font",       label:"Font",       icon: Type           },
   { id:"text",       label:"Text",       icon: SlidersHorizontal },
 ]
 
@@ -71,16 +70,13 @@ export default function Editor() {
     <>
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
 
-      {/* ── Top bar ─────────────────────────────────────────────── */}
+      {/* Top bar */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <button onClick={() => navigate("/create")}
             className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors mb-0.5">
             <ChevronLeft size={14} />Back to verse
           </button>
-          <h1 className="font-display text-3xl font-semibold text-stone-900 dark:text-stone-100">
-            Style your poster
-          </h1>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setShowShare(true)}
@@ -95,7 +91,7 @@ export default function Editor() {
         </div>
       </div>
 
-      {/* ── Canvas — full width centered ────────────────────────── */}
+      {/* Canvas — full width centered*/}
       <div className="flex justify-center mb-6">
         <div className="w-full max-w-xs sm:max-w-sm">
           <PosterCanvas
@@ -117,7 +113,7 @@ export default function Editor() {
         </div>
       </div>
 
-      {/* ── Tabs ────────────────────────────────────────────────── */}
+      {/* Tabs */}
       <div className="flex gap-1.5 p-1.5 bg-stone-100 dark:bg-stone-800/60 rounded-2xl mb-4">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button key={id} onClick={() => setActiveTab(id)}
@@ -132,7 +128,7 @@ export default function Editor() {
         ))}
       </div>
 
-      {/* ── Tab panels ──────────────────────────────────────────── */}
+      {/* Tab panels*/}
       <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 p-5">
 
         {/* Background */}
@@ -164,28 +160,6 @@ export default function Editor() {
                     : "bg-stone-50 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-700"
                 }`}>
                 {t.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Font */}
-        {activeTab === "font" && (
-          <div className="grid grid-cols-2 gap-2.5">
-            {POSTER_FONTS.map((f, i) => (
-              <button key={f.id} onClick={() => setStyle({ fontIndex: i })}
-                className={`flex flex-col items-start px-4 py-3.5 rounded-xl border transition-all duration-150 text-left ${
-                  state.fontIndex === i
-                    ? "bg-stone-900 text-white border-stone-900 dark:bg-stone-100 dark:text-stone-900 dark:border-stone-100"
-                    : "bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-700"
-                }`}>
-                <span className="text-[10px] font-medium uppercase tracking-widest opacity-50 mb-1"
-                  style={{ fontFamily:"'Inter',sans-serif" }}>
-                  {f.label}
-                </span>
-                <span className="text-base leading-snug" style={{ fontFamily: f.css }}>
-                  {f.sample}
-                </span>
               </button>
             ))}
           </div>
@@ -246,7 +220,7 @@ export default function Editor() {
   )
 }
 
-// ── Background swatch ─────────────────────────────────────────────────
+// Background swatch 
 function BgSwatch({ bg, index, selected, onSelect }) {
   const isGradient = bg.style.startsWith("linear") || bg.style.startsWith("radial")
   return (
