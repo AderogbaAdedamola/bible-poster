@@ -4,7 +4,7 @@ const ThemeContext = createContext(null)
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    // Check localStorage first, then system preference
+    
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("postverse-theme")
       if (stored) return stored
