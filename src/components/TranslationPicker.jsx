@@ -1,6 +1,4 @@
-// src/components/TranslationPicker.jsx
-// Searchable dropdown for Bible translations.
-// Loads from localStorage cache (24hr) or fetches fresh from the API.
+
 
 import { useState, useEffect, useRef, useMemo } from "react"
 import { ChevronDown, Search, Loader2, AlertCircle, Check } from "lucide-react"

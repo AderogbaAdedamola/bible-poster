@@ -1,4 +1,3 @@
-// src/context/PosterContext.jsx
 import { createContext, useContext, useReducer } from "react"
 const PosterContext = createContext(null)
 

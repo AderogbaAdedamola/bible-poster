@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import { Link } from "react-router-dom"
 import { BookText, Palette, Share2, ArrowRight, Sparkles } from "lucide-react"
 import Logo from "../components/Logo"

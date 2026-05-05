@@ -1,4 +1,3 @@
-// src/pages/Editor.jsx
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -79,6 +78,9 @@ export default function Editor() {
             className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors mb-0.5">
             <ChevronLeft size={14} />Back to verse
           </button>
+          <h1 className="font-display text-3xl font-semibold text-stone-900 dark:text-stone-100">
+            Style your poster
+          </h1>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setShowShare(true)}
@@ -97,6 +99,7 @@ export default function Editor() {
       <div className="flex justify-center mb-6">
         <div className="w-full max-w-xs sm:max-w-sm">
           <PosterCanvas
+            key={state.fontIndex}
             ref={canvasRef}
             verse={verse}
             style={style}

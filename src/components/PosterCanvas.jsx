@@ -1,7 +1,3 @@
-// src/components/PosterCanvas.jsx
-// The actual poster — used in Editor, PosterView, and for PNG download.
-// Accepts a `style` object and `verse` object as props so it can be
-// used standalone on the share page without needing PosterContext.
 
 import { forwardRef } from "react"
 import { BACKGROUNDS, TEMPLATES, POSTER_FONTS } from "../data/backgrounds"

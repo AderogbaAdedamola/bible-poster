@@ -1,6 +1,4 @@
-// src/components/Logo.jsx
-// PostVerse logo — a stylised open book whose pages form a subtle "V"
-// Works on both light and dark backgrounds via currentColor
+
 
 export default function Logo({ size = 32, showText = true, className = "" }) {
   return (

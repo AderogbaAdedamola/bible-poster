@@ -1,4 +1,3 @@
-// src/components/VersePicker.jsx
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -21,7 +20,7 @@ export default function VersePicker() {
   const OT = BIBLE_BOOKS.filter((b) => b.testament === "OT")
   const NT = BIBLE_BOOKS.filter((b) => b.testament === "NT")
 
-  // ── Handlers ─────────────────────────────────────────────────────
+  //Handlers
 
 function handleBook(book) {
     dispatch({ type: "SET_BOOK", bookId: book.id, bookName: book.name })
@@ -95,7 +94,7 @@ function handleBook(book) {
   const selectedBook = BIBLE_BOOKS.find((b) => b.id === state.bookId)
   const chapterCount = selectedBook?.chapters ?? 0
 
-  // ── Render ────────────────────────────────────────────────────────
+  // Render
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
 
@@ -244,7 +243,7 @@ function handleBook(book) {
   )
 }
 
-// ── Tiny sub-components ───────────────────────────────────────────────
+// Tiny sub-components 
 
 function SectionLabel({ children, className = "" }) {
   return (

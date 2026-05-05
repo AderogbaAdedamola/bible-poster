@@ -1,4 +1,3 @@
-// src/components/ShareModal.jsx
 import { useState } from "react"
 import { X, Copy, Check, MessageCircle, Send } from "lucide-react"
 import { SiFacebook, SiX, SiInstagram } from '@icons-pack/react-simple-icons';
@@ -55,7 +54,6 @@ export default function ShareModal({ verse, style, onClose }) {
   ]
 
   return (
-    // Backdrop
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}

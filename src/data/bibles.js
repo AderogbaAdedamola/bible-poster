@@ -1,6 +1,3 @@
-// src/data/bibles.js
-// All data for bible.helloao.org — NO API key required
-// Full docs: https://bible.helloao.org/docs/reference/
 
 export const BIBLE_BOOKS = [
   // Old Testament

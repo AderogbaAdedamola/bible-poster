@@ -1,6 +1,3 @@
-// src/pages/PosterView.jsx
-// The share link landing page — reads everything from URL params,
-// renders the poster, and sets OG meta tags for social previews.
 import { useSearchParams } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
