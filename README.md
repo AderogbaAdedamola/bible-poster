@@ -7,7 +7,7 @@ Turn Scripture into beautiful posters. Pick any Bible verse, style it your way, 
 - Browse all 66 books across 50+ Bible translations — no API key required
 - Searchable translation picker with 24hr local cache
 - Random verse generator from 20 popular verses
-- Poster editor with gradient and solid color backgrounds, overlay templates, 10 serif fonts, font size control and text alignment
+- Poster editor with gradient and solid color backgrounds, overlay templates, font size control and text alignment
 - Download poster as PNG at 900x1200px
 - Shareable link with Open Graph meta tags for rich social previews
 - Dark and light mode with no flash on refresh
