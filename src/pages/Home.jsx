@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom"
 import { BookText, Palette, Share2, ArrowRight, Sparkles } from "lucide-react"
+import { SiGithub } from '@icons-pack/react-simple-icons';
 import Logo from "../components/Logo"
+
 
 const FEATURES = [
   {
     icon: BookText,
     title: "Every translation",
-    desc: "KJV, BSB, WEB, NET, ASV and more — fetched live, no account needed.",
+    desc: "KJV, BSB, WEB, NET, ASV and more, fetched live, no account needed.",
   },
   {
     icon: Palette,
     title: "Full customisation",
-    desc: "Gradient backgrounds, overlay templates, fonts, sizes — make it yours.",
+    desc: "Gradient backgrounds, overlay templates, fonts, sizes.  make it yours.",
   },
   {
     icon: Share2,
@@ -26,10 +28,6 @@ export default function Home() {
 
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-32 flex flex-col items-center text-center gap-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 text-xs font-medium">
-          <Sparkles size={12} />
-          Free · No account required
-        </div>
 
         <h1 className="font-display text-5xl sm:text-7xl font-semibold text-stone-900 dark:text-stone-100 leading-tight tracking-tight max-w-2xl">
           Turn Scripture into{" "}
@@ -52,7 +50,7 @@ export default function Home() {
             <ArrowRight size={15} />
           </Link>
           <Link
-            to="/create"
+            to="/demo"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all duration-200"
           >
             See how it works
@@ -100,6 +98,26 @@ export default function Home() {
           </Link>
         </div>
       </section>
+      <footer className="border-t border-stone-100 dark:border-stone-800 mt-auto">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex items-center justify-between">
+          <p className="text-sm text-stone-400 dark:text-stone-500">
+            Built by{" "}
+            <span className="text-stone-600 dark:text-stone-300 font-medium">
+              Aderogba Adedamola
+            </span>
+          </p>
+          
+          <a  
+            href="https://github.com/AderogbaAdedamola"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm text-stone-400 dark:text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
+          >
+            <SiGithub size={16} />
+            GitHub
+          </a>
+        </div>
+      </footer>
     </div>
   )
 }

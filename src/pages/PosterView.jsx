@@ -1,7 +1,7 @@
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams, Link } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
-import { Link } from "react-router-dom"
 import PosterCanvas from "../components/PosterCanvas"
+import { BACKGROUNDS } from "../data/backgrounds"
 
 export default function PosterView() {
   const [params] = useSearchParams()
@@ -13,12 +13,16 @@ export default function PosterView() {
   }
 
   const style = {
-    bgIndex:       Number(params.get("bg"))    || 0,
-    templateIndex: Number(params.get("tmpl"))  || 0,
-    fontIndex:     Number(params.get("font"))  || 0,
-    fontSize:      Number(params.get("size"))  || 20,
-    textAlign:     params.get("align")         || "center",
+    bgIndex:       Number(params.get("bg"))   || 0,
+    templateIndex: Number(params.get("tmpl")) || 0,
+    fontIndex:     Number(params.get("font")) || 0,
+    fontSize:      Number(params.get("size")) || 20,
+    textAlign:     params.get("align")        || "center",
   }
+
+  const bg = BACKGROUNDS[style.bgIndex] ?? BACKGROUNDS[0]
+
+  const ogImageUrl = `${window.location.origin}/api/og?ref=${encodeURIComponent(verse.verseRef)}&text=${encodeURIComponent((verse.verseText ?? "").slice(0, 120))}&bg=${encodeURIComponent(bg.style)}`
 
   const ogDesc = verse.verseText
     ? `${verse.verseText.slice(0, 120)}${verse.verseText.length > 120 ? "…" : ""}`
@@ -28,13 +32,15 @@ export default function PosterView() {
     <>
       <Helmet>
         <title>{verse.verseRef ? `${verse.verseRef} — PostVerse` : "PostVerse"}</title>
-        <meta property="og:title"       content={verse.verseRef || "PostVerse"} />
-        <meta property="og:description" content={ogDesc} />
-        <meta property="og:type"        content="website" />
-        <meta property="og:site_name"   content="PostVerse" />
-        <meta name="twitter:card"       content="summary_large_image" />
-        <meta name="twitter:title"      content={verse.verseRef || "PostVerse"} />
+        <meta property="og:title"        content={`${verse.verseRef} — PostVerse`} />
+        <meta property="og:description"  content={ogDesc} />
+        <meta property="og:image"        content={ogImageUrl} />
+        <meta property="og:image:width"  content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card"        content="summary_large_image" />
+        <meta name="twitter:title"       content={`${verse.verseRef} — PostVerse`} />
         <meta name="twitter:description" content={ogDesc} />
+        <meta name="twitter:image"       content={ogImageUrl} />
       </Helmet>
 
       <div className="max-w-lg mx-auto px-4 py-10 flex flex-col items-center gap-6">

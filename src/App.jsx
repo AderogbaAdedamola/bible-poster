@@ -5,6 +5,7 @@ import Create from "./pages/Create"
 import Editor from "./pages/Editor"
 import PosterView from "./pages/PosterView"
 import NotFound from "./pages/NotFound"
+import Demo from "./pages/Demo"
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/"        element={<Home />} />
           <Route path="/create"  element={<Create />} />
           <Route path="/editor"  element={<Editor />} />
+          <Route path="/demo"  element={<Demo />} />
           <Route path="/v"       element={<PosterView />} />
           <Route path="*"        element={<NotFound />} />
         </Routes>
